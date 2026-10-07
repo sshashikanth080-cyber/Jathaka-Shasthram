@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090612">
+    <meta name="description" content="Jathaka Shasthram — traditional Vedic birth chart and Kundli experience.">
+    <title>Jathaka Shasthram — Vedic Astrology</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-inner">
+        <a href="#home" class="logo" aria-label="Jathaka Shasthram home">
+            <span class="logo-symbol">✦</span>
+            <span>Jathaka<span class="logo-accent"> Shasthram</span></span>
+        </a>
+
+        <nav class="nav-links" id="mainNav" aria-label="Main navigation">
+            <a href="#home">Home</a>
+            <a href="#horoscope">Horoscope</a>
+            <a href="#kundli">Kundli</a>
+            <a href="#compatibility">Compatibility</a>
+            <a href="#numerology">Numerology</a>
+        </nav>
+
+        <div class="nav-actions">
+            <div class="nav-language">
+                <label class="sr-only" for="siteLanguage">Language</label>
+                <select id="siteLanguage" aria-label="Language">
+                    <option value="English">English</option>
+                    <option value="Kannada">ಕನ್ನಡ</option>
+                </select>
+            </div>
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mainNav">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main id="home">
+    <section class="hero">
+        <div class="hero-glow hero-glow-one"></div>
+        <div class="hero-glow hero-glow-two"></div>
+
+        <div class="hero-content">
+            <div class="eyebrow">✦ VEDIC ASTROLOGY ✦</div>
+            <h1>Discover Your <span>Cosmic Path</span></h1>
+            <p>Explore your birth chart, planetary placements, Nakshatra and traditional Vedic astrology insights in one simple place.</p>
+            <a href="#kundli" class="hero-button">Create My Kundli <span>→</span></a>
+        </div>
+
+        <div class="hero-scroll-hint" aria-hidden="true"><span>Scroll to explore</span><b>↓</b></div>
+
+        <div class="zodiac-orbit" aria-hidden="true">
+            <div class="orbit-ring"></div>
+            <div class="zodiac-center">✦</div>
+            <div class="zodiac-symbol z1">♈</div><div class="zodiac-symbol z2">♉</div>
+            <div class="zodiac-symbol z3">♊</div><div class="zodiac-symbol z4">♋</div>
+            <div class="zodiac-symbol z5">♌</div><div class="zodiac-symbol z6">♍</div>
+            <div class="zodiac-symbol z7">♎</div><div class="zodiac-symbol z8">♏</div>
+            <div class="zodiac-symbol z9">♐</div><div class="zodiac-symbol z10">♑</div>
+            <div class="zodiac-symbol z11">♒</div><div class="zodiac-symbol z12">♓</div>
+        </div>
+    </section>
+
+    <section class="features" id="horoscope">
+        <div class="section-heading centered">
+            <p class="small-title">✦ EXPLORE JATHAKA SHASTHRAM</p>
+            <h2>Astrology tools for your journey</h2>
+        </div>
+
+        <div class="feature-grid">
+            <a class="feature-card feature-link" href="#kundli"><div class="feature-icon">☀️</div><h3>Birth Chart</h3><p>Explore your Lagna, planetary positions, Nakshatra, houses and personalized traditional guidance.</p><span class="feature-cta">Create Kundli →</span></a>
+            <a class="feature-card feature-link" href="#daily-guide"><div class="feature-icon">🌙</div><h3>Daily Guide</h3><p>A simple traditional daily-theme section designed for a future daily horoscope experience.</p><span class="feature-cta">View module →</span></a>
+            <a class="feature-card feature-link report-feature" href="#kundli"><div class="feature-icon">📄</div><h3>Full Kundli Report</h3><p>Generate a structured report from your current birth chart and save it as a PDF.</p><span class="feature-cta">Generate Report →</span></a>
+            <a class="feature-card feature-link" href="#compatibility"><div class="feature-icon">💫</div><h3>Compatibility</h3><p>Compare two birth dates using a clearly labeled numerology-based compatibility preview.</p><span class="feature-cta">Try compatibility →</span></a>
+            <a class="feature-card feature-link" href="#numerology"><div class="feature-icon">🔢</div><h3>Numerology</h3><p>Calculate Life Path and Name Number using common traditional numerology methods.</p><span class="feature-cta">Calculate number →</span></a>
+        </div>
+    </section>
+
+    <section class="birth-section" id="kundli">
+        <div class="birth-container">
+            <div class="section-heading centered">
+                <p class="small-title">✦ PERSONAL BIRTH CHART</p>
+                <h2>Create Your Janma Kundli</h2>
+                <p>Enter your birth details to calculate a Vedic sidereal birth chart.</p>
+            </div>
+
+            <form id="birthForm" class="birth-form">
+                <div class="form-group full-width">
+                    <label for="fullName">Full Name</label>
+                    <input id="fullName" type="text" placeholder="Enter your name" autocomplete="name" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group"><label for="birthDate">Birth Date</label><input id="birthDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" aria-describedby="birthDateHelp" required></div>
+                    <div class="form-group"><label for="birthTimeHour">Birth Time</label>
+                        <div class="time-picker" data-time-picker data-target="birthTime">
+                            <select id="birthTimeHour" aria-label="Birth hour" required></select>
+                            <span class="time-separator">:</span>
+                            <select id="birthTimeMinute" aria-label="Birth minute" required></select>
+                            <select id="birthTimePeriod" class="time-period" aria-label="AM or PM" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                            <input id="birthTime" type="hidden">
+                        </div>
+                        <small>Choose the exact time and select AM or PM.</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthPlace">Birth Place</label>
+                    <input id="birthPlace" type="text" placeholder="Example: Bengaluru, Karnataka, India" autocomplete="address-level2" required>
+                    <small>Enter city, state and country for better location matching.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="language">Result Language</label>
+                    <select id="language"><option value="English">English</option><option value="Kannada">ಕನ್ನಡ</option></select>
+                </div>
+
+                <button type="submit" class="generate-btn"><span>🔮</span> Generate My Birth Chart</button>
+            </form>
+        </div>
+    </section>
+
+
+    <section class="tool-section" id="daily-guide">
+        <div class="tool-container">
+            <div class="section-heading centered">
+                <p class="small-title">✦ DAILY TRADITIONAL GUIDE</p>
+                <h2>Today’s astrology theme</h2>
+                <p>A lightweight educational section — not a guaranteed prediction.</p>
+            </div>
+            <div class="daily-guide-card">
+                <div class="daily-icon">☀️</div>
+                <div>
+                    <h3>Use reflection, not certainty</h3>
+                    <p>Astrology can be used as a cultural reflection tool. For important choices, combine any traditional insight with reliable information and your own judgment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tool-section" id="compatibility">
+        <div class="tool-container">
+            <div class="section-heading centered">
+                <p class="small-title">✦ COMPATIBILITY</p>
+                <h2>Compatibility Preview</h2>
+                <p>This quick preview uses date-based numerology only. It is not a full Kundli matching score.</p>
+            </div>
+            <form id="compatibilityForm" class="tool-form">
+                <div class="compatibility-person-grid">
+                    <div class="compatibility-person-card">
+                        <div class="tool-person-title"><span>👤</span><strong>Person 1</strong></div>
+                        <div class="form-group"><label for="personOneName">Name</label><input id="personOneName" type="text" placeholder="Name" required></div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="personOneDate">Birth Date</label><input id="personOneDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" required></div>
+                            <div class="form-group"><label for="personOneTimeHour">Birth Time</label>
+                            <div class="time-picker" data-time-picker data-target="personOneTime">
+                                <select id="personOneTimeHour" aria-label="Birth hour" required></select>
+                                <span class="time-separator">:</span>
+                                <select id="personOneTimeMinute" aria-label="Birth minute" required></select>
+                                <select id="personOneTimePeriod" class="time-period" aria-label="AM or PM" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                                <input id="personOneTime" type="hidden">
+                            </div>
+                        </div>
+                        </div>
+                        <div class="form-group"><label for="personOnePlace">Birth Place</label><input id="personOnePlace" type="text" placeholder="City, State, Country" required></div>
+                    </div>
+                    <div class="compatibility-person-card">
+                        <div class="tool-person-title"><span>❤️</span><strong>Person 2</strong></div>
+                        <div class="form-group"><label for="personTwoName">Name</label><input id="personTwoName" type="text" placeholder="Name" required></div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="personTwoDate">Birth Date</label><input id="personTwoDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" required></div>
+                            <div class="form-group"><label for="personTwoTimeHour">Birth Time</label>
+                            <div class="time-picker" data-time-picker data-target="personTwoTime">
+                                <select id="personTwoTimeHour" aria-label="Birth hour" required></select>
+                                <span class="time-separator">:</span>
+                                <select id="personTwoTimeMinute" aria-label="Birth minute" required></select>
+                                <select id="personTwoTimePeriod" class="time-period" aria-label="AM or PM" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                                <input id="personTwoTime" type="hidden">
+                            </div>
+                        </div>
+                        </div>
+                        <div class="form-group"><label for="personTwoPlace">Birth Place</label><input id="personTwoPlace" type="text" placeholder="City, State, Country" required></div>
+                    </div>
+                </div>
+                <button class="generate-btn" type="submit"><span>💫</span> Compare Birth Charts</button>
+            </form>
+            <div id="compatibilityResult" class="tool-result" hidden></div>
+        </div>
+    </section>
+
+    <section class="tool-section" id="numerology">
+        <div class="tool-container">
+            <div class="section-heading centered">
+                <p class="small-title">✦ NUMEROLOGY</p>
+                <h2>Calculate Your Numbers</h2>
+                <p>Traditional numerology calculation for educational and entertainment use.</p>
+            </div>
+            <form id="numerologyForm" class="tool-form">
+                <div class="form-row">
+                    <div class="form-group"><label for="numerologyName">Full Name</label><input id="numerologyName" type="text" placeholder="Enter your full name" required></div>
+                    <div class="form-group"><label for="numerologyDate">Birth Date</label><input id="numerologyDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" required></div>
+                </div>
+                <button class="generate-btn" type="submit"><span>🔢</span> Calculate Numbers</button>
+            </form>
+            <div id="numerologyResult" class="tool-result" hidden></div>
+        </div>
+    </section>
+
+    <section class="disclaimer">
+        <div class="disclaimer-inner">
+            <span class="disclaimer-icon">ℹ️</span>
+            <div><h3>About Jathaka Shasthram</h3><p>Jathaka Shasthram presents traditional Vedic astrology calculations for cultural and entertainment purposes. Astrology interpretations are not guaranteed predictions and should not replace professional medical, legal or financial advice.</p></div>
+        </div>
+    </section>
+</main>
+
+<button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">↑</button>
+    <!-- Professional AI Chat -->
+    <button class="ai-chat-launcher" id="aiChatLauncher" type="button" aria-label="Open Jathaka Shasthram AI chat" aria-expanded="false">
+        <span class="ai-launcher-icon">✦</span>
+        <span class="ai-launcher-label">AI Chat</span>
+        <span class="ai-online-dot"></span>
+    </button>
+
+    <aside class="ai-chat-panel" id="aiChatPanel" aria-label="Jathaka Shasthram AI chat" aria-hidden="true">
+        <div class="ai-chat-header">
+            <div class="ai-brand">
+                <div class="ai-avatar">✦</div>
+                <div><strong>Jathaka Shasthram AI</strong><span>Ask about astrology & your Kundli</span></div>
+            </div>
+            <button class="ai-close" id="aiChatClose" type="button" aria-label="Close chat">×</button>
+        </div>
+        <div class="ai-chat-status"><span></span><b>AI Assistant</b><em id="aiChartStatus">General questions welcome</em></div>
+        <div class="ai-chat-messages" id="aiChatMessages" aria-live="polite"></div>
+        <div class="ai-quick-prompts" id="aiQuickPrompts">
+            <button type="button" data-prompt="What can you tell me about my birth chart?">My chart</button>
+            <button type="button" data-prompt="Explain my Moon sign and Nakshatra in simple words.">Moon & Nakshatra</button>
+            <button type="button" data-prompt="Compare my D1 and D9 charts and explain the combined traditional interpretation. Mention vargottama planets only if my D1 and D9 signs match.">D1 + D9</button><button type="button" data-prompt="What does my chart suggest about career themes?">Career</button>
+        </div>
+        <form class="ai-chat-form" id="aiChatForm">
+            <textarea id="aiChatInput" rows="1" maxlength="1200" placeholder="Ask Jathaka Shasthram anything..." aria-label="Ask Jathaka Shasthram"></textarea>
+            <button type="submit" aria-label="Send message">➤</button>
+        </form>
+        <div class="ai-chat-footer">Traditional astrology guidance · AI can make mistakes. Verify important information independently.</div>
+    </aside>
+
+    <a class="whatsapp-float" id="whatsappFloat" href="https://wa.me/?text=Hello%20Jathaka Shasthram%2C%20I%20have%20a%20question%20about%20astrology." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+        <span>◉</span><b>WhatsApp</b>
+    </a>
+
+
+<footer>
+    <div class="footer-inner">
+        <div class="logo"><span class="logo-symbol">✦</span><span>Jathaka<span class="logo-accent"> Shasthram</span></span></div>
+        <p>© 2026 Jathaka Shasthram · Traditional astrology experience</p>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
