@@ -100,13 +100,17 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group"><label for="birthDate">Birth Date</label><input id="birthDate" type="date" required></div>
-                    <div class="form-group"><label for="birthTime">Birth Time</label><div class="time-picker" data-time-picker data-target="birthTime" aria-label="Birth time">
-                            <select id="birthHour" aria-label="Hour"></select>
+                    <div class="form-group"><label for="birthDate">Birth Date</label><input id="birthDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" aria-describedby="birthDateHelp" required></div>
+                    <div class="form-group"><label for="birthTimeHour">Birth Time</label>
+                        <div class="time-picker" data-time-picker data-target="birthTime">
+                            <select id="birthTimeHour" aria-label="Birth hour" required></select>
                             <span class="time-separator">:</span>
-                            <select id="birthMinute" aria-label="Minute"></select>
-                            <select id="birthPeriod" aria-label="AM or PM"></select>
-                        </div><input id="birthTime" type="hidden">
+                            <select id="birthTimeMinute" aria-label="Birth minute" required></select>
+                            <select id="birthTimePeriod" class="time-period" aria-label="AM or PM" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                            <input id="birthTime" type="hidden">
+                        </div>
+                        <small>Choose the exact time and select AM or PM.</small>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -156,13 +160,16 @@
                         <div class="tool-person-title"><span>👤</span><strong>Person 1</strong></div>
                         <div class="form-group"><label for="personOneName">Name</label><input id="personOneName" type="text" placeholder="Name" required></div>
                         <div class="form-row">
-                            <div class="form-group"><label for="personOneDate">Birth Date</label><input id="personOneDate" type="date" required></div>
-                            <div class="form-group"><label for="personOneTime">Birth Time</label><div class="time-picker" data-time-picker data-target="personOneTime" aria-label="Person 1 birth time">
-                                <select id="personOneHour" aria-label="Hour"></select>
+                            <div class="form-group"><label for="personOneDate">Birth Date</label><input id="personOneDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" required></div>
+                            <div class="form-group"><label for="personOneTimeHour">Birth Time</label>
+                            <div class="time-picker" data-time-picker data-target="personOneTime">
+                                <select id="personOneTimeHour" aria-label="Birth hour" required></select>
                                 <span class="time-separator">:</span>
-                                <select id="personOneMinute" aria-label="Minute"></select>
-                                <select id="personOnePeriod" aria-label="AM or PM"></select>
-                            </div><input id="personOneTime" type="hidden"></div>
+                                <select id="personOneTimeMinute" aria-label="Birth minute" required></select>
+                                <select id="personOneTimePeriod" class="time-period" aria-label="AM or PM" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                                <input id="personOneTime" type="hidden">
+                            </div>
+                        </div>
                         </div>
                         <div class="form-group"><label for="personOnePlace">Birth Place</label><input id="personOnePlace" type="text" placeholder="City, State, Country" required></div>
                     </div>
@@ -170,13 +177,16 @@
                         <div class="tool-person-title"><span>❤️</span><strong>Person 2</strong></div>
                         <div class="form-group"><label for="personTwoName">Name</label><input id="personTwoName" type="text" placeholder="Name" required></div>
                         <div class="form-row">
-                            <div class="form-group"><label for="personTwoDate">Birth Date</label><input id="personTwoDate" type="date" required></div>
-                            <div class="form-group"><label for="personTwoTime">Birth Time</label><div class="time-picker" data-time-picker data-target="personTwoTime" aria-label="Person 2 birth time">
-                                <select id="personTwoHour" aria-label="Hour"></select>
+                            <div class="form-group"><label for="personTwoDate">Birth Date</label><input id="personTwoDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" required></div>
+                            <div class="form-group"><label for="personTwoTimeHour">Birth Time</label>
+                            <div class="time-picker" data-time-picker data-target="personTwoTime">
+                                <select id="personTwoTimeHour" aria-label="Birth hour" required></select>
                                 <span class="time-separator">:</span>
-                                <select id="personTwoMinute" aria-label="Minute"></select>
-                                <select id="personTwoPeriod" aria-label="AM or PM"></select>
-                            </div><input id="personTwoTime" type="hidden"></div>
+                                <select id="personTwoTimeMinute" aria-label="Birth minute" required></select>
+                                <select id="personTwoTimePeriod" class="time-period" aria-label="AM or PM" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                                <input id="personTwoTime" type="hidden">
+                            </div>
+                        </div>
                         </div>
                         <div class="form-group"><label for="personTwoPlace">Birth Place</label><input id="personTwoPlace" type="text" placeholder="City, State, Country" required></div>
                     </div>
@@ -197,7 +207,7 @@
             <form id="numerologyForm" class="tool-form">
                 <div class="form-row">
                     <div class="form-group"><label for="numerologyName">Full Name</label><input id="numerologyName" type="text" placeholder="Enter your full name" required></div>
-                    <div class="form-group"><label for="numerologyDate">Birth Date</label><input id="numerologyDate" type="date" required></div>
+                    <div class="form-group"><label for="numerologyDate">Birth Date</label><input id="numerologyDate" class="date-input" type="text" inputmode="numeric" autocomplete="bday" maxlength="10" placeholder="DD-MM-YYYY" required></div>
                 </div>
                 <button class="generate-btn" type="submit"><span>🔢</span> Calculate Numbers</button>
             </form>

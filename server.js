@@ -32,6 +32,11 @@ function isRetryableStatus(status) {
     return [408, 425, 429, 500, 502, 503, 504].includes(status);
 }
 
+function isModelAvailabilityError(status, message = "") {
+    const text = String(message || "").toLowerCase();
+    return (status === 400 || status === 404) && /model|not found|not supported|unsupported|invalid.*model|unknown model/.test(text);
+}
+
 async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -108,12 +113,9 @@ function validateBirthInput(body) {
 
     if (y < 1800 || y > 2100) return "Birth year must be between 1800 and 2100.";
     if (m < 1 || m > 12) return "Invalid birth month.";
+    if (d < 1 || d > 31) return "Invalid birth date.";
     if (h < 0 || h > 23) return "Invalid birth hour.";
     if (min < 0 || min > 59) return "Invalid birth minute.";
-
-    // Strict Gregorian calendar validation. This prevents dates such as 31-Feb.
-    const daysInMonth = new Date(Date.UTC(y, m, 0)).getUTCDate();
-    if (d < 1 || d > daysInMonth) return `Invalid birth date. ${m}/${y} has only ${daysInMonth} days.`;
 
     return null;
 }
@@ -156,57 +158,7 @@ async function callNavamsha(path, body) {
     return data;
 }
 
-function getTimezoneName(latitude, longitude) {
-    const tzLookup = require("tz-lookup");
-    return tzLookup(Number(latitude), Number(longitude));
-}
-
-function getTimezoneOffsetHours(year, month, date, hours, minutes, timeZone) {
-    // Convert the supplied local civil time into the numeric UTC offset for the
-    // birth location. Intl handles historical/DST rules for the IANA timezone.
-    const utcGuess = new Date(Date.UTC(
-        Number(year),
-        Number(month) - 1,
-        Number(date),
-        Number(hours),
-        Number(minutes),
-        0,
-        0
-    ));
-
-    const parts = new Intl.DateTimeFormat("en-US", {
-        timeZone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hourCycle: "h23"
-    }).formatToParts(utcGuess);
-
-    const values = {};
-    for (const part of parts) {
-        if (part.type !== "literal") values[part.type] = part.value;
-    }
-
-    const localAsUtc = Date.UTC(
-        Number(values.year),
-        Number(values.month) - 1,
-        Number(values.day),
-        Number(values.hour),
-        Number(values.minute),
-        Number(values.second)
-    );
-
-    const offset = (localAsUtc - utcGuess.getTime()) / 3600000;
-    if (!Number.isFinite(offset) || offset < -14 || offset > 14) {
-        throw new Error("Could not determine the birth location timezone.");
-    }
-    return offset;
-}
-
-function buildBirthData(input, location, timezone) {
+function buildBirthData(input, location) {
     return {
         year: Number(input.year),
         month: Number(input.month),
@@ -215,7 +167,9 @@ function buildBirthData(input, location, timezone) {
         minutes: Number(input.minutes),
         latitude: location.latitude,
         longitude: location.longitude,
-        timezone: Number(timezone)
+        // Current Jathaka Shasthram prototype is India-focused. For a global launch,
+        // replace this with a real timezone lookup for the birth location/date.
+        timezone: 5.5
     };
 }
 
@@ -224,9 +178,7 @@ async function calculateBasicChart(input) {
     if (validationError) throw new Error(validationError);
 
     const location = await getCoordinates(input.birthPlace);
-    const timeZone = getTimezoneName(location.latitude, location.longitude);
-    const timezone = getTimezoneOffsetHours(input.year, input.month, input.date, input.hours, input.minutes, timeZone);
-    const birthData = buildBirthData(input, location, timezone);
+    const birthData = buildBirthData(input, location);
     const kundaliData = await callNavamsha("kundali/basic", birthData);
 
     return {
@@ -243,9 +195,7 @@ app.post("/api/birth-chart", async (req, res) => {
         }
 
         const location = await getCoordinates(req.body.birthPlace);
-        const timeZone = getTimezoneName(location.latitude, location.longitude);
-        const timezone = getTimezoneOffsetHours(req.body.year, req.body.month, req.body.date, req.body.hours, req.body.minutes, timeZone);
-        const birthData = buildBirthData(req.body, location, timezone);
+        const birthData = buildBirthData(req.body, location);
         const kundaliData = await callNavamsha("kundali/basic", birthData);
 
         const chartData = await callNavamsha("horoscope-chart-svg-code", {
@@ -463,7 +413,7 @@ function buildGeminiContents(messages) {
 }
 
 async function callGeminiWithRetry(payload) {
-    const configured = String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash-lite")
+    const configured = String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash")
         .split(",")
         .map(v => v.trim())
         .filter(Boolean);
@@ -489,7 +439,25 @@ async function callGeminiWithRetry(payload) {
 
                 // A successful response, or a non-transient client error, should
                 // not be retried against another model.
-                if (response.ok || !isRetryableStatus(response.status)) {
+                if (response.ok) {
+                    return response;
+                }
+
+                // If a configured model is unavailable for this API key/project,
+                // move immediately to the next known-good model. Other 4xx errors
+                // are real request errors and should not be masked by another model.
+                if (response.status === 400 || response.status === 404) {
+                    let errorBody = {};
+                    try { errorBody = await response.clone().json(); } catch {}
+                    const modelMessage = errorBody?.error?.message || "";
+                    if (isModelAvailabilityError(response.status, modelMessage)) {
+                        console.warn(`Gemini model ${model} is unavailable; trying the next model.`);
+                        break;
+                    }
+                    return response;
+                }
+
+                if (!isRetryableStatus(response.status)) {
                     return response;
                 }
 
@@ -656,7 +624,7 @@ app.get("/api/ai-status", (req, res) => {
     res.json({
         success: true,
         configured: Boolean(process.env.GEMINI_API_KEY),
-        models: String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash-lite")
+        models: String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash")
             .split(",").map(v => v.trim()).filter(Boolean)
     });
 });

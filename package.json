@@ -1,7 +1,7 @@
 {
-  "name": "jathakashasthram",
-  "version": "3.2.0",
-  "description": "Jathaka Shasthram premium Vedic astrology web experience",
+  "name": "jathaka-shasthram",
+  "version": "3.1.0",
+  "description": "Jathaka Shasthram - traditional Vedic astrology web experience",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
