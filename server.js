@@ -32,6 +32,11 @@ function isRetryableStatus(status) {
     return [408, 425, 429, 500, 502, 503, 504].includes(status);
 }
 
+function isModelAvailabilityError(status, message = "") {
+    const text = String(message || "").toLowerCase();
+    return (status === 400 || status === 404) && /model|not found|not supported|unsupported|invalid.*model|unknown model/.test(text);
+}
+
 async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -408,7 +413,7 @@ function buildGeminiContents(messages) {
 }
 
 async function callGeminiWithRetry(payload) {
-    const configured = String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash-lite")
+    const configured = String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash")
         .split(",")
         .map(v => v.trim())
         .filter(Boolean);
@@ -434,7 +439,25 @@ async function callGeminiWithRetry(payload) {
 
                 // A successful response, or a non-transient client error, should
                 // not be retried against another model.
-                if (response.ok || !isRetryableStatus(response.status)) {
+                if (response.ok) {
+                    return response;
+                }
+
+                // If a configured model is unavailable for this API key/project,
+                // move immediately to the next known-good model. Other 4xx errors
+                // are real request errors and should not be masked by another model.
+                if (response.status === 400 || response.status === 404) {
+                    let errorBody = {};
+                    try { errorBody = await response.clone().json(); } catch {}
+                    const modelMessage = errorBody?.error?.message || "";
+                    if (isModelAvailabilityError(response.status, modelMessage)) {
+                        console.warn(`Gemini model ${model} is unavailable; trying the next model.`);
+                        break;
+                    }
+                    return response;
+                }
+
+                if (!isRetryableStatus(response.status)) {
                     return response;
                 }
 
@@ -601,7 +624,7 @@ app.get("/api/ai-status", (req, res) => {
     res.json({
         success: true,
         configured: Boolean(process.env.GEMINI_API_KEY),
-        models: String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash-lite")
+        models: String(process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash")
             .split(",").map(v => v.trim()).filter(Boolean)
     });
 });
